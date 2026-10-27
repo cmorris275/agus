@@ -1,0 +1,8 @@
+.venv/
+.env
+*.pem
+*.p8
+__pycache__/
+*.log
+.DS_Store
+raw_data/
