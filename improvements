@@ -11,3 +11,7 @@ Once that table provides the needed subregion data, update the query to use
 the appropriate subregion field and join, update the campaign-member-analysis skill
 documentation, and validate the resulting subregion assignments and row counts.
 Keep the current fallback until the upstream update is available.
+
+Pending: Add a Renewal Opportunity query
+
+Pending: Add an Invoices dimension for Expansion attribution, or create a separate skill
