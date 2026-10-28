@@ -5,7 +5,7 @@ description: Extract and analyze marketing campaign-member detail by first-assoc
 
 # Campaign member analysis
 
-Read [campaign_member_analysis.sql](campaign_member_analysis.sql) before running it. Resolve this resource relative to the skill folder; do not depend on a machine-specific checkout path.
+Read [campaign-member-analysis.sql](campaign-member-analysis.sql) before running it. Resolve this resource relative to the skill folder; do not depend on a machine-specific checkout path.
 
 ## Reporting scope and row grain
 
@@ -60,7 +60,7 @@ Sources are the marketing campaign-member, MQL, and opportunity-source tables pl
 
 Use an available authorized Snowflake connection, honoring an explicitly requested platform. Prepare only supplied date bounds using validated SQL date values or supported bindings, and remove unused date predicates and placeholders from the execution copy. Apply campaign filters to an execution copy; leave the reusable template intact unless a query change is requested.
 
-For a requested CSV, use `raw_data/campaign_member_analysis_YYYY-MM-DD_to_YYYY-MM-DD.csv` for a supplied range, `raw_data/campaign_member_analysis_all_dates.csv` without date bounds, or a `from_YYYY-MM-DD`/`through_YYYY-MM-DD` suffix for a one-sided bound. Export all result pages and columns in UTF-8 with normal CSV quoting, ISO dates, unchanged identifiers/decimal precision, and empty fields for SQL nulls. Do not overwrite a different extract without an explicit refresh request. Read the saved CSV back to confirm it matches the fetched records.
+For a requested CSV, use `raw-data/campaign-member-analysis-YYYY-MM-DD-to-YYYY-MM-DD.csv` for a supplied range, `raw-data/campaign-member-analysis-all-dates.csv` without date bounds, or a `from-YYYY-MM-DD`/`through-YYYY-MM-DD` suffix for a one-sided bound. Export all result pages and columns in UTF-8 with normal CSV quoting, ISO dates, unchanged identifiers/decimal precision, and empty fields for SQL nulls. Do not overwrite a different extract without an explicit refresh request. Read the saved CSV back to confirm it matches the fetched records.
 
 Validate any applied reporting-date bounds and result completeness. With no date restriction, report observed coverage and missing dates. Report both row count and distinct-member count when they differ. Reconcile distinct MQL and SAO counts and opportunity-deduplicated pipeline with source aggregations when changing joins or metric logic. Check that every NBM member has a response date. An empty successful query should produce a header-only export, not invented results.
 

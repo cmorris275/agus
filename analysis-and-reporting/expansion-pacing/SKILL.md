@@ -5,11 +5,11 @@ description: Calculate marketing expansion pace from Expansion attribution actua
 
 # Expansion pacing
 
-Use the [Expansion attribution skill](../expansion-attribution/SKILL.md) and its [expansion_attribution.sql](../expansion-attribution/expansion_attribution.sql) for actuals, and [daily_goals.csv](daily_goals.csv) for goals. Resolve these resources relative to this folder. This workflow is for **marketing expansion only**.
+Use the [Expansion attribution skill](../expansion-attribution/SKILL.md) and its [expansion-attribution.sql](../expansion-attribution/expansion-attribution.sql) for actuals, and [daily-goals.csv](daily-goals.csv) for goals. Resolve these resources relative to this folder. This workflow is for **marketing expansion only**.
 
 ## Sources and actuals
 
-The dedicated expansion-pacing tables have not been created. [expansion_pacing.sql](expansion_pacing.sql) intentionally remains a placeholder; it is not needed to fetch actuals from the existing Expansion attribution source. Do not invent the future tables or substitute the SAO/PG goals source.
+The dedicated expansion-pacing tables have not been created. [expansion-pacing.sql](expansion-pacing.sql) intentionally remains a placeholder; it is not needed to fetch actuals from the existing Expansion attribution source. Do not invent the future tables or substitute the SAO/PG goals source.
 
 Follow the Expansion attribution skill's source and aggregation rules:
 
@@ -83,6 +83,6 @@ Use an authorized Snowflake connection for actuals and the supplied CSV for goal
 
 Before reporting pace, verify target uniqueness at `(DATE, REGION, SUB_REGION, TYPE)`, actual measure additivity, type/region mappings, date coverage, and matching units. Reconcile independently aggregated actual totals with the Expansion attribution source under the same filters. Confirm that no actual or target after the effective through-date entered either sum.
 
-For extracts, fetch every result row/page, compare fetched counts with result metadata, and split execution into date windows if the connector truncates results. Save raw exports or daily aggregates in the project's `raw_data/` folder with descriptive dates, and retain the query, extraction context, and observed date coverage. Label aggregates as aggregates. Distinct invoice counts within daily groups are not necessarily additive across groups. Read saved CSVs back to verify completeness and values.
+For extracts, fetch every result row/page, compare fetched counts with result metadata, and split execution into date windows if the connector truncates results. Save raw exports or daily aggregates in the project's `raw-data/` folder with descriptive dates, and retain the query, extraction context, and observed date coverage. Label aggregates as aggregates. Distinct invoice counts within daily groups are not necessarily additive across groups. Read saved CSVs back to verify completeness and values.
 
 Deliver the requested report with accrued actuals, accrued goals, pace, period start, effective through-date, and source context. State any earlier cap imposed by actuals or quarterly targets and any unsupported breakdown. Fresh pulls are required for current results; an earlier exported snapshot must be identified as such.

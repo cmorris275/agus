@@ -5,7 +5,7 @@ description: Extract and analyze Weave opportunities by pipeline-generation date
 
 # Weave SAOs and pipeline generation
 
-Read [weave_sao_and_pg.sql](weave_sao_and_pg.sql) before execution. Resolve the query relative to this folder and output paths relative to the user's project. This first draft documents the supplied query; source grain, available opportunity fields, and revenue units still require confirmation against the Weave source.
+Read [weave-sao-and-pg.sql](weave-sao-and-pg.sql) before execution. Resolve the query relative to this folder and output paths relative to the user's project. This first draft documents the supplied query; source grain, available opportunity fields, and revenue units still require confirmation against the Weave source.
 
 ## Population and reporting basis
 
@@ -43,7 +43,7 @@ Account enrichment joins `os.account_id = a.id` in `dwh_cleaned.salesforce.clean
 
 Use an authorized Snowflake connection and honor an explicitly requested platform. Prepare only supplied date bounds as described above, using validated SQL date literals or supported bindings; remove unused placeholders and the date predicate when dates are absent. Keep request-specific scope changes in an execution copy unless editing the reusable template is requested.
 
-For CSV requests, use `raw_data/weave_sao_and_pg_YYYY-MM-DD_to_YYYY-MM-DD.csv` for a supplied range, `raw_data/weave_sao_and_pg_all_dates.csv` without date bounds, or a `from_YYYY-MM-DD`/`through_YYYY-MM-DD` suffix for one-sided bounds. Add a descriptive scope suffix when useful. Fetch all rows/pages, preserve all returned columns, identifiers, decimal precision, and source text, and use UTF-8 CSV quoting, ISO dates, and empty fields for SQL nulls. Use stable opportunity ordering and avoid overwriting a different extract without a refresh request.
+For CSV requests, use `raw-data/weave-sao-and-pg-YYYY-MM-DD-to-YYYY-MM-DD.csv` for a supplied range, `raw-data/weave-sao-and-pg-all-dates.csv` without date bounds, or a `from-YYYY-MM-DD`/`through-YYYY-MM-DD` suffix for one-sided bounds. Add a descriptive scope suffix when useful. Fetch all rows/pages, preserve all returned columns, identifiers, decimal precision, and source text, and use UTF-8 CSV quoting, ISO dates, and empty fields for SQL nulls. Use stable opportunity ordering and avoid overwriting a different extract without a refresh request.
 
 Validate any supplied date bounds, null pipeline dates in unbounded extracts, result completeness, source opportunity grain, and account-join uniqueness. Reconcile distinct opportunity counts and payout totals against the Weave source with identical filters. If classification logic changes, check Scored, each OWF pattern, null, and fallback cases. Read the saved CSV back to confirm its dimensions and values match the fetched result.
 

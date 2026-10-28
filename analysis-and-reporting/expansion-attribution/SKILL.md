@@ -5,7 +5,7 @@ description: Extract and analyze marketing-attributed expansion invoice detail u
 
 # Expansion attribution
 
-Read [expansion_attribution.sql](expansion_attribution.sql) before execution. Its source is `dwh_analytics.marketing.expansion_marketing_attribution_detail`. Resolve the SQL relative to this skill folder and output paths relative to the user's project, without hardcoded machine paths.
+Read [expansion-attribution.sql](expansion-attribution.sql) before execution. Its source is `dwh_analytics.marketing.expansion_marketing_attribution_detail`. Resolve the SQL relative to this skill folder and output paths relative to the user's project, without hardcoded machine paths.
 
 This first draft documents what the query implements. The underlying allocation model, row uniqueness, and revenue units are not established by the SELECT alone. Verify those details when a requested calculation depends on them; do not invent attribution windows, allocation weights, or annualization rules.
 
@@ -61,7 +61,7 @@ Allocation totals need not equal full invoice amounts in this extract: the chann
 
 Use an available authorized Snowflake connection and honor an explicitly requested platform. Apply only supplied valid dates and requested campaign/account/segment filters to the execution copy with supported bindings or safely rendered values. Do not claim a query was run when only the SQL was prepared.
 
-For a requested CSV, use `raw_data/expansion_attribution_YYYY-MM-DD_to_YYYY-MM-DD.csv` for a supplied range, `raw_data/expansion_attribution_all_dates.csv` without date bounds, or a `from_YYYY-MM-DD`/`through_YYYY-MM-DD` suffix for one-sided bounds. Use a descriptive scope suffix when useful and label previews as previews. Fetch every result page, preserve columns, identifiers, numeric precision, and source text, and use UTF-8 with standard CSV quoting and empty fields for nulls. Avoid overwriting a different extract without a refresh request.
+For a requested CSV, use `raw-data/expansion-attribution-YYYY-MM-DD-to-YYYY-MM-DD.csv` for a supplied range, `raw-data/expansion-attribution-all-dates.csv` without date bounds, or a `from-YYYY-MM-DD`/`through-YYYY-MM-DD` suffix for one-sided bounds. Use a descriptive scope suffix when useful and label previews as previews. Fetch every result page, preserve columns, identifiers, numeric precision, and source text, and use UTF-8 with standard CSV quoting and empty fields for nulls. Avoid overwriting a different extract without a refresh request.
 
 Before reporting totals, verify that the execution copy is not limited to a preview, any supplied date bounds and the channel filter match the request, and the fetched row count matches result metadata. Without date bounds, report observed coverage and null invoice dates. Check source grain and reconcile allocated totals against a source aggregation using identical filters. Compare distinct raw invoices, accounts, and members when relevant rather than calling all rows “invoices.” Read the saved CSV back to verify that its values and dimensions match the fetched data.
 

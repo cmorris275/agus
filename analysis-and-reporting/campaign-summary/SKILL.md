@@ -5,7 +5,7 @@ description: Pull, validate, export, and interpret marketing campaign summaries 
 
 # Campaign summary
 
-Use [campaign_summary.sql](campaign_summary.sql) as the starting query. Read it before execution; it is the source of truth for the implemented calculations. Apply request-specific dates or filters to an execution copy.
+Use [campaign-summary.sql](campaign-summary.sql) as the starting query. Read it before execution; it is the source of truth for the implemented calculations. Apply request-specific dates or filters to an execution copy.
 
 ## Scope and inputs
 
@@ -94,7 +94,7 @@ Prepare optional date predicates as described above, using supported bindings or
 
 For a requested CSV:
 
-- Use the user's destination. In this project, use `raw_data/campaign_summary_YYYY-MM-DD_to_YYYY-MM-DD.csv` for a supplied range, `campaign_summary_all_dates.csv` without date bounds, or a `from_YYYY-MM-DD`/`through_YYYY-MM-DD` suffix for one-sided bounds. Resolve all names under `raw_data/`. Add a meaningful scope suffix for a filtered extract when useful.
+- Use the user's destination. In this project, use `raw-data/campaign-summary-YYYY-MM-DD-to-YYYY-MM-DD.csv` for a supplied range, `campaign-summary-all-dates.csv` without date bounds, or a `from-YYYY-MM-DD`/`through-YYYY-MM-DD` suffix for one-sided bounds. Resolve all names under `raw-data/`. Add a meaningful scope suffix for a filtered extract when useful.
 - Export every returned column and row, including all result pages or partitions. A preview is not a complete extract.
 - Use UTF-8, a header row, ISO calendar dates, and standard CSV quoting for embedded commas, quotes, and newlines. Preserve identifiers, decimal precision, and source text. Write SQL nulls as empty fields and retain numeric zeros.
 - Keep exports reproducible with a stable order such as campaign ID. Avoid overwriting a different extract; replace an existing file when the user asks to refresh it, otherwise use a distinguishing suffix.
