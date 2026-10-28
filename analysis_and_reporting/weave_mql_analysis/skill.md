@@ -7,7 +7,7 @@ description: Extract and analyze Weave MQL cohorts using the bundled Snowflake q
 
 Read [weave_mql_analysis.sql](weave_mql_analysis.sql) before execution. Resolve it relative to this folder. This first draft documents the supplied query; the upstream definition of a Weave MQL is not established by this SELECT.
 
-The `responses` and `nbm` CTEs and their output expressions are aligned with [mql_analysis.sql](../mql_analysis/mql_analysis.sql). When updating these shared definitions, compare both the activity source and the per-MQL matching expression. Retain the Weave source, campaign classifications, and opportunity scope when synchronizing these sections.
+The `responses` and `nbm` CTEs and their output expressions are aligned with [mql_analysis.sql](../mql-analysis/mql_analysis.sql). When updating these shared definitions, compare both the activity source and the per-MQL matching expression. Retain the Weave source, campaign classifications, and opportunity scope when synchronizing these sections.
 
 ## Population, dates, and grain
 

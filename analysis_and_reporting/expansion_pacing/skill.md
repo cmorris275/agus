@@ -5,7 +5,7 @@ description: Calculate marketing expansion pace from Expansion attribution actua
 
 # Expansion pacing
 
-Use the [Expansion attribution skill](../expansion_attribution/skill.md) and its [expansion_attribution.sql](../expansion_attribution/expansion_attribution.sql) for actuals, and [daily_goals.csv](daily_goals.csv) for goals. Resolve these resources relative to this folder. This workflow is for **marketing expansion only**.
+Use the [Expansion attribution skill](../expansion-attribution/skill.md) and its [expansion_attribution.sql](../expansion-attribution/expansion_attribution.sql) for actuals, and [daily_goals.csv](daily_goals.csv) for goals. Resolve these resources relative to this folder. This workflow is for **marketing expansion only**.
 
 ## Sources and actuals
 
