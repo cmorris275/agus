@@ -1,14 +1,14 @@
 select
     os.*,
-    extract(dayofyear from os.pipeline_generation_date) as day_nubmer,
+    extract(dayofyear from os.pipeline_generation_date) as day_number,
     extract(weekofyear from os.pipeline_generation_date) as week_number,
     extract(month from os.pipeline_generation_date) as month_number,
     to_varchar(extract(year from os.pipeline_generation_date)) as year,
     case
         when os.mql_type = 'Scored' then 'Scored'
-        when os.attributed_marketing_campaign_name = 'Raised Hand' and os.attributed_marketing_campaign_name ilike '%orgs web form_weavy%' then 'RH: OWF - Weavy Website'
-        when os.attributed_marketing_campaign_name = 'Raised Hand' and os.attributed_marketing_campaign_name ilike '%orgs web form_website%' then 'RH: OWF - Figma Website'
-        when os.attributed_marketing_campaign_name = 'Raised Hand' and os.attributed_marketing_campaign_name ilike '%orgs web form_product%' then 'RH: OWF - Product'
+        when os.mql_type = 'Raised Hand' and os.attributed_marketing_campaign_name ilike '%orgs web form_weavy%' then 'RH: OWF - Weavy Website'
+        when os.mql_type = 'Raised Hand' and os.attributed_marketing_campaign_name ilike '%orgs web form_website%' then 'RH: OWF - Figma Website'
+        when os.mql_type = 'Raised Hand' and os.attributed_marketing_campaign_name ilike '%orgs web form_product%' then 'RH: OWF - Product'
         else 'RH - Ex-OWF'
     end as mql_type_mod,
     a.employeecount__c as employee_count,

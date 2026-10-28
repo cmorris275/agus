@@ -29,7 +29,7 @@ Preserve the SQL's ordering and labels:
 | --- | --- |
 | `owf_source` | Product pattern first, then Website pattern, otherwise Other. There is no Weavy branch: a Weavy-only name is Other. Independent of MQL type. |
 | `mql_type_mod` | Scored first; then Raised Hand split into Weavy Website, Figma Website, and Product, in that order; otherwise `RH - Ex-OWF`. |
-| `mql_type_sipmle` | OWF when the campaign name matches `%orgs web form%`, otherwise EX-OWF. Preserve the misspelled alias for compatibility. |
+| `mql_type_simple` | OWF when the campaign name matches `%orgs web form%`, otherwise EX-OWF. |
 
 The Weavy branch matches `%orgs web form_weavy%`; the Figma Website branch matches `%orgs web form_website%`. Preserve the supplied Weavy spelling even though the source and folder use Weave. This query does not split AI-credit website campaigns into a separate classification. The fallback `RH - Ex-OWF` can include unexpected or null types and is not proof of Raised Hand intent. Underscores in `ILIKE` patterns are single-character wildcards.
 

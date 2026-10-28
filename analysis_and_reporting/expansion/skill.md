@@ -11,7 +11,7 @@ This first draft documents what the query implements. The underlying allocation 
 
 ## Reporting scope
 
-The bundled SQL has **no date filter, row limit, or ordering**. Its header still describes a 10-row preview, but the executable query no longer contains `LIMIT 10`. A full extract must fetch every result row/page. Add a limit in an execution copy only for a requested preview and label that output as a preview. Preserve the reusable source unless changing the saved query is part of the task.
+The bundled SQL has **no date filter, row limit, or ordering**. A full extract must fetch every result row/page. Add a limit in an execution copy only for a requested preview and label that output as a preview. Preserve the reusable source unless changing the saved query is part of the task.
 
 Reporting dates are optional and supplied by the user. Use `d.closedate`, exposed as `invoice_date`, when date filtering is requested. With no dates, apply no reporting-date restriction and do not invent or require a period; null invoice dates can remain. Validate supplied dates, require start <= end for a range, and clarify invalid or ambiguous input. Resolve an omitted year only from clear context and state the assumption. Use only the supplied lower and/or upper bound. For an inclusive calendar-date range, append a validated predicate to the existing channel filter in an execution copy, for example:
 

@@ -1,5 +1,3 @@
--- Marketing-attributed expansion detail. Preview only: limited to 10 rows.
--- No reporting-date filter is applied.
 SELECT
     -- Invoice date and calendar fields.
     d.closedate AS invoice_date,

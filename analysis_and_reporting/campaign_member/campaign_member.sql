@@ -158,6 +158,8 @@ SELECT
 
     -- Campaign NBM credit requires a valid response and a person-matched
     -- meeting within +/- 30 days of the FIRST response, inclusive.
+    -- Cast the response to DATE: both bounds are midnight, inclusive.
+    -- Later meeting times on day +30 do not qualify.
     -- Return the member ID once per detail row, not the number of meetings.
     CASE
         WHEN cm.campaign_member_first_responded_date IS NOT NULL

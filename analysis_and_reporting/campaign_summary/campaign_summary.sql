@@ -2,7 +2,8 @@
 -- Render start_date and end_date as SQL date values before execution.
 -- Both boundary dates are inclusive; calendar fields use the first association
 -- within this range, not necessarily the campaign's first-ever association.
--- Source grain: one row per campaign_member_id, mql_id, opp_id, and contact id.
+-- Output grain: one row per distinct combination of campaign ID and selected
+-- campaign attributes. Attribute differences can yield multiple rows per ID.
 WITH campaign_members AS (
     -- Keep members with and without a response date: MQL and opportunity
     -- attribution credit does not require a valid campaign response.
@@ -57,7 +58,8 @@ nbm_members AS (
     -- Campaign NBM credit requires a valid campaign response: a non-null
     -- campaign_member_first_responded_date. MQL/SAO/PG credit has no such rule.
     -- Match the member's person_id to the event's whoid and use an inclusive
-    -- +/- 30-calendar-day window around the member's FIRST response date.
+    -- +/- 30-day window around the member's FIRST response cast to DATE.
+    -- Both bounds are midnight, inclusive; later times on day +30 do not qualify.
     -- This intentionally includes meetings before the response. Neither the
     -- response nor meeting date must fall inside the association-date range.
     -- Count each member once even when several meetings match. The same event
@@ -68,8 +70,8 @@ nbm_members AS (
     INNER JOIN nbm AS n
         ON cm.person_id = n.primary_contact_id
         AND n.nbm_date BETWEEN
-            DATEADD(DAY, -30, cm.campaign_member_first_responded_date)
-            AND DATEADD(DAY, 30, cm.campaign_member_first_responded_date)
+            DATEADD(DAY, -30, cm.campaign_member_first_responded_date::DATE)
+            AND DATEADD(DAY, 30, cm.campaign_member_first_responded_date::DATE)
     WHERE cm.campaign_member_first_responded_date IS NOT NULL
 ),
 

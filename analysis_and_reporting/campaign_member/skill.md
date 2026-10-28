@@ -5,7 +5,7 @@ description: Extract and analyze marketing campaign-member detail by first-assoc
 
 # Campaign-member detail
 
-Read [camapaign_member.sql](camapaign_member.sql) before running it. The folder and SQL filename retain the project's existing spelling. Resolve this resource relative to the skill folder; do not depend on a machine-specific checkout path.
+Read [campaign_member.sql](campaign_member.sql) before running it. Resolve this resource relative to the skill folder; do not depend on a machine-specific checkout path.
 
 ## Reporting scope and row grain
 
@@ -40,7 +40,7 @@ NBM means **New Business Meeting**. Eligible Salesforce events have type `AE - N
 
 A credited member must have a **valid campaign response** and at least one matching event within 30 days before or after the **first response date**, inclusive. An MQL or opportunity cannot substitute for a missing response date. The response and meeting can fall outside the association-date reporting period; meetings before the response intentionally qualify.
 
-The member-detail SQL casts the first-response field to `DATE` before constructing its NBM window; the summary SQL uses that field directly. If the source is a timestamp, these boundary times can differ. Do not claim exact reconciliation without checking datatypes and boundary matches.
+Both the member-detail and campaign-summary SQL cast the first-response field to `DATE` before applying ±30 days. The window starts at midnight 30 days before that date and ends at midnight 30 days after it, inclusive. The meeting field is not cast to `DATE`, so meeting timestamps later than midnight on day +30 do not qualify. Use the same reporting timezone consistently when one is requested; check source datatypes and boundary matches when reconciling reports.
 
 The event CTE deduplicates the account/person/related-record/end-date meeting key, preferring completed, non-canceled, non-no-show events and then latest modification and event ID. These preferences do not exclude incomplete, canceled, or no-show meetings. The source also enriches events with sales hierarchy; the final marker only tests whether a qualifying match exists.
 

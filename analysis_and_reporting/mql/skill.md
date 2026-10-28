@@ -27,7 +27,7 @@ Opportunity outcome dates can be outside the MQL cohort range. Activity windows 
 | --- | --- |
 | `owf_source` | Product or Website when the campaign name matches the corresponding orgs-web-form pattern; otherwise Other. Independent of MQL type. |
 | `mql_type_mod` | Scored first; then Raised Hand split into OWF Product, OWF Website, and OWF Website AI Credits; otherwise `RH - Ex-OWF`. |
-| `mql_type_sipmle` | OWF versus EX-OWF from the broad campaign-name pattern. The existing misspelled output alias is retained for compatibility. |
+| `mql_type_simple` | OWF versus EX-OWF from the broad campaign-name pattern. |
 | `automation` | Automation when `is_outreach_automation = TRUE`; otherwise No Automation, including null values. |
 
 Preserve the campaign-name pattern precedence. The fallback `RH - Ex-OWF` can include null or unexpected types; it does not establish Raised Hand intent. SQL underscores in `ILIKE` patterns are single-character wildcards. Do not replace these labels with a claimed authoritative taxonomy without validating the underlying field values.

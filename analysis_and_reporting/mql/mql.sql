@@ -135,7 +135,7 @@ SELECT
     CASE
         WHEN dim.mql_campaign_name ILIKE '%orgs web form%' THEN 'OWF'
         ELSE 'EX-OWF'
-    END AS mql_type_sipmle, -- Existing output alias retained for compatibility.
+    END AS mql_type_simple,
 
     -- MQL Date Manipulation
     DATEADD(DAY, -1, DATE_TRUNC('week', DATEADD(DAY, 1, dim.mql_date))) AS mql_week,

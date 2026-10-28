@@ -1,10 +1,6 @@
--- Opportunity detail by inclusive pipeline-generation date.
--- Render date parameters as SQL date values. All sources and sales segments
--- are included; this differs from commercial-only campaign-summary SAOs.
-
 SELECT
     os.*,
-    EXTRACT(DAYOFYEAR FROM os.pipeline_generation_date) AS day_nubmer, -- Existing output alias retained for compatibility.
+    EXTRACT(DAYOFYEAR FROM os.pipeline_generation_date) AS day_number,
     EXTRACT(WEEKOFYEAR FROM os.pipeline_generation_date) AS week_number,
     EXTRACT(MONTH FROM os.pipeline_generation_date) AS month_number,
     TO_VARCHAR(EXTRACT(YEAR FROM os.pipeline_generation_date)) AS year,
@@ -39,5 +35,5 @@ FROM dwh_analytics.marketing.fig2_sf_sales_opportunity_source AS os
 LEFT JOIN dwh_cleaned.salesforce.cleaned_salesforce_account AS a
     ON os.account_id = a.id
 WHERE 
-    os.pipeline_generation_date BETWEEN {{ start_date }} AND {{ end_date }};
-    and sales_segment in ('SMB', 'Mid-Market', 'Enterprise')
+    os.pipeline_generation_date BETWEEN {{ start_date }} AND {{ end_date }}
+    and sales_segment in ('SMB', 'Mid-Market', 'Enterprise');

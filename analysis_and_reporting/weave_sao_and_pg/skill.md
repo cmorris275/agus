@@ -31,13 +31,11 @@ Confirm opportunity fields and payout currency/units before publishing measures.
 
 ## Classifications and enrichment
 
-The supplied `mql_type_mod` CASE currently returns `Scored` when `os.mql_type = 'Scored'`, and `RH - Ex-OWF` otherwise. Its three OWF branches each require the **campaign name** to equal `Raised Hand` and also match a web-form pattern. Those conditions cannot both hold, so the Weavy Website, Figma Website, and Product branches are unreachable.
+The `mql_type_mod` CASE returns `Scored` when `os.mql_type = 'Scored'`. Its three OWF branches require `os.mql_type = 'Raised Hand'` and a matching attributed campaign-name pattern.
 
-The likely intended equality is `os.mql_type = 'Raised Hand'`, but that is an unconfirmed correction. Preserve the supplied query unless a logic change is requested, disclose this limitation when using the classification, and do not interpret zero OWF rows as absence of OWF pipeline. The fallback also includes null or unexpected MQL types and does not prove Raised Hand intent.
+Preserve branch precedence: Scored, Weavy Website (`%orgs web form_weavy%`), Figma Website (`%orgs web form_website%`), Product (`%orgs web form_product%`), then `RH - Ex-OWF`. The fallback includes unmatched Raised Hand records and null or unexpected MQL types, so it does not prove Raised Hand intent. These patterns use SQL underscore wildcards. There is no separate AI-credit classification in this query.
 
-If the condition is revised, retain the requested branch precedence: Scored, Weavy Website (`%orgs web form_weavy%`), Figma Website (`%orgs web form_website%`), Product (`%orgs web form_product%`), then fallback. These patterns use SQL underscore wildcards. There is no separate AI-credit classification in this query.
-
-Calendar fields derive from pipeline-generation date. `year` is text, and `day_nubmer` retains the supplied spelling. Week numbering depends on Snowflake session settings; establish a consistent convention for weekly comparisons.
+Calendar fields derive from pipeline-generation date. `year` is text, and `day_number` is the day of the year. Week numbering depends on Snowflake session settings; establish a consistent convention for weekly comparisons.
 
 Account enrichment joins `os.account_id = a.id` in `dwh_cleaned.salesforce.cleaned_salesforce_account`. `employee_count` and `figma_segment` describe that account source, not a historical snapshot or necessarily the opportunity's sales segment. Employee bands are 1–10, 11–25, 26–50, 51–100, 101–250, 251–500, 501–1,000, 1,001–5,000, and 5,000+. Zero/null become Unknown; other unmatched values remain null. Unmatched accounts remain in the extract through the left join.
 

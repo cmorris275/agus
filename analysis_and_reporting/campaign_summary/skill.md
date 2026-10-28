@@ -64,7 +64,7 @@ A campaign member receives NBM credit only when all three conditions hold:
 
 The window is anchored to the **first response**, not association date, MQL date, or a later response. Meetings before the response intentionally qualify. Neither the response nor meeting must occur within the report's association-date range. Missing person matches or missing meeting dates cannot qualify. Keep the response requirement local to NBMs and valid-response counts so members without responses retain MQL, SAO, and PG credit.
 
-This SQL applies `DATEADD` directly to the first-response field; the member-detail query casts that field to `DATE` first. If it is a timestamp, their NBM boundary times can differ. Preserve and disclose that distinction when reconciling the two reports rather than assuming identical calendar-day eligibility.
+Both the campaign-summary and member-detail SQL cast the first-response field to `DATE` before applying ±30 days. The window starts at midnight 30 days before that date and ends at midnight 30 days after it, inclusive. The meeting field is not cast to `DATE`, so meeting timestamps later than midnight on day +30 do not qualify. Use the same reporting timezone consistently when one is requested; check source datatypes and boundary matches when reconciling reports.
 
 **Counting unit:** `nbms` counts distinct campaign-member IDs with at least one matching event. Several events for one member contribute one; a single event can qualify more than one campaign member or campaign if each satisfies the rules. This is a member-level meeting association, not distinct meeting volume or exclusive campaign attribution. For each campaign, `nbms` must be no greater than `responses`; a campaign with zero valid responses must have zero NBMs.
 
