@@ -1,11 +1,11 @@
 ---
-name: sao-pg-analysis
+name: sao-and-pg-analysis
 description: Extract and analyze opportunities by pipeline-generation date using the bundled Snowflake query, including SAO counts, payout-based pipeline, attributed MQL classifications, employee bands, and account segment. Use for pipeline-period and opportunity-detail reporting, not campaign-member or MQL cohort reporting.
 ---
 
 # SAO and PG analysis
 
-Read [sao-pg-analysis.sql](sao-pg-analysis.sql) before execution. Resolve it relative to this folder and use the fields and attribution rules implemented in that query. SAO means sales-accepted opportunity; PG means pipeline generation. The reporting date is pipeline-generation date; the SELECT imposes no separate stage/status flag.
+Read [sao-and-pg-analysis.sql](sao-and-pg-analysis.sql) before execution. Resolve it relative to this folder and use the fields and attribution rules implemented in that query. SAO means sales-accepted opportunity; PG means pipeline generation. The reporting date is pipeline-generation date; the SELECT imposes no separate stage/status flag.
 
 ## Population and time basis
 
@@ -52,7 +52,7 @@ Employee count and `figma_segment` come from the current cleaned Salesforce acco
 
 Use an authorized Snowflake connection, honoring an explicitly requested platform. Prepare only supplied date bounds as described above, using validated SQL date values or supported bindings. Remove unused placeholders and dangling SQL syntax. Apply request-specific source, region, segment, campaign, or opportunity filters in the execution copy; keep the template reusable.
 
-For a requested CSV, use `raw-data/sao-pg-analysis-YYYY-MM-DD-to-YYYY-MM-DD.csv` for a supplied range, `raw-data/sao-pg-analysis-all-dates.csv` without date bounds, or a `from-YYYY-MM-DD`/`through-YYYY-MM-DD` suffix for one-sided bounds. Add a scope suffix when needed. Export all rows/pages and columns with stable opportunity ordering, UTF-8 CSV quoting, ISO dates, unchanged IDs/decimal precision, and empty fields for nulls. Do not overwrite a different extract without a refresh request. Keep metadata and analysis outside the raw CSV.
+For a requested CSV, use `raw-data/sao-and-pg-analysis-YYYY-MM-DD-to-YYYY-MM-DD.csv` for a supplied range, `raw-data/sao-and-pg-analysis-all-dates.csv` without date bounds, or a `from-YYYY-MM-DD`/`through-YYYY-MM-DD` suffix for one-sided bounds. Add a scope suffix when needed. Export all rows/pages and columns with stable opportunity ordering, UTF-8 CSV quoting, ISO dates, unchanged IDs/decimal precision, and empty fields for nulls. Do not overwrite a different extract without a refresh request. Keep metadata and analysis outside the raw CSV.
 
 ## Validation and interpretation
 
