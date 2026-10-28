@@ -17,15 +17,24 @@ Use [campaign-summary.sql](campaign-summary.sql) as the starting query. Read it 
 
 ## Reporting basis
 
-The reporting-date field is `campaign_member_first_associated_date` from the campaign-member source, cast to `DATE`. Treat a conversational reference to “campaign first-associated date” as this field in an established campaign-summary request. It is distinct from `campaign_start_date` and from a campaign's first-ever member association.
+The reporting-date field is the original `campaign_member_first_associated_date` timestamp from the campaign-member source. Do not cast it to `DATE` when filtering the cohort. Treat a conversational reference to “campaign first-associated date” as this field in an established campaign-summary request. It is distinct from `campaign_start_date` and from a campaign's first-ever member association.
 
-The saved SQL still contains a `BETWEEN {{ start_date }} AND {{ end_date }}` predicate, with explicit date casts, inside `campaign_members`. In the execution copy, render it only for a valid supplied range, replace it with the supplied one-sided bound, or remove the entire predicate when dates are absent. Apply cohort filters inside this CTE before aggregation; filtering final campaign minimum/maximum dates is not equivalent. Without date bounds, the cohort spans all available associations, including null association dates if present. Retain response eligibility and relative NBM windows independently of optional reporting dates.
+The saved SQL applies the following timestamp bounds inside `campaign_members`, preserving the current Hex notebook convention:
+
+```sql
+WHERE cm.campaign_member_first_associated_date >= {{ start_date }}
+  AND cm.campaign_member_first_associated_date < {{ end_date }}
+```
+
+Use the selected start date at midnight inclusively and stop at midnight at the beginning of the end date exclusively. Do not add one day to `end_date`. Label the input **End date (exclusive)** in dashboards, reports, and other interfaces. Inputs `2026-07-01` and `2026-09-30` include July 1 through September 29 and exclude every timestamp on September 30. Equal start and end dates define an empty interval. Apply this same convention anywhere the campaign cohort is constructed, including older queries, updated queries, dashboards, and reports.
+
+In the execution copy, render both predicates for a valid supplied range, retain only the supplied predicate for a one-sided bound, or remove both predicates when dates are absent. Apply cohort filters inside this CTE before aggregation; filtering final campaign minimum/maximum dates is not equivalent. Without date bounds, the cohort spans all available associations, including null association dates if present. Retain response eligibility and relative NBM windows independently of optional reporting dates.
 
 A **valid campaign response** is a campaign-member ID with a non-null `campaign_member_first_responded_date`. A valid response is **required for campaign NBM credit**, but **not required** for MQL, SAO, or PG attribution credit. This is why association date defines the base cohort: retain members with and without response dates, and apply the response-date requirement locally to `responses` and NBM eligibility. Do not filter the base cohort or MQL/opportunity joins to valid responders. A campaign can legitimately have zero valid responses and still receive MQLs or attributed pipeline.
 
 The response date need only be present; it does not have to fall within the association-date reporting range. A report of responses occurring during a period would use a different date basis.
 
-Compare calendar dates explicitly, using the timestamp's stored date representation. Do not substitute implicit timestamp-to-date boundary comparisons: session timezone conversion can admit records from an adjacent date. If a specific reporting timezone is requested, apply that timezone consistently to the filter and all reported association dates.
+Bind or render validated date inputs as midnight boundaries using the same timestamp datatype and session/reporting timezone conventions as the Hex notebook. Compare the original source timestamp directly; do not truncate it to a calendar date or shift the end boundary. Keep these conventions consistent across queries, dashboards, and reports so their populations agree. The output-only casts of the cohort's minimum and maximum association timestamps to `DATE` may remain.
 
 `first_cm_associated_date` and `last_cm_associated_date` are the earliest and latest non-null member associations in the selected cohort: within supplied bounds when present, otherwise across all available dates that meet the other filters. They remain null for a group with no dated associations. Day, week, month, and year describe the earliest association in that cohort. They are not separate daily groups. The query's week number follows the Snowflake session's week settings; establish a consistent convention before comparing week-based results across sessions.
 
@@ -94,7 +103,7 @@ Prepare optional date predicates as described above, using supported bindings or
 
 For a requested CSV:
 
-- Use the user's destination. In this project, use `raw-data/campaign-summary-YYYY-MM-DD-to-YYYY-MM-DD.csv` for a supplied range, `campaign-summary-all-dates.csv` without date bounds, or a `from-YYYY-MM-DD`/`through-YYYY-MM-DD` suffix for one-sided bounds. Resolve all names under `raw-data/`. Add a meaningful scope suffix for a filtered extract when useful.
+- Use the user's destination. In this project, use `raw-data/campaign-summary-YYYY-MM-DD-to-YYYY-MM-DD.csv` for a supplied range, `campaign-summary-all-dates.csv` without date bounds, or a `from-YYYY-MM-DD`/`before-YYYY-MM-DD` suffix for one-sided bounds. For a bounded filename, the second date is the exclusive end boundary; state that explicitly in the accompanying report or provenance. Resolve all names under `raw-data/`. Add a meaningful scope suffix for a filtered extract when useful.
 - Export every returned column and row, including all result pages or partitions. A preview is not a complete extract.
 - Use UTF-8, a header row, ISO calendar dates, and standard CSV quoting for embedded commas, quotes, and newlines. Preserve identifiers, decimal precision, and source text. Write SQL nulls as empty fields and retain numeric zeros.
 - Keep exports reproducible with a stable order such as campaign ID. Avoid overwriting a different extract; replace an existing file when the user asks to refresh it, otherwise use a distinguishing suffix.
@@ -102,7 +111,7 @@ For a requested CSV:
 
 ## Validation and delivery
 
-Before delivering an extract, reconcile the fetched row count with result metadata, verify column widths, check campaign-ID uniqueness, and confirm association-date outputs satisfy any supplied bounds. Without date bounds, report observed coverage and missing dates instead of claiming a requested period. Read the saved CSV back and compare its parsed values with the fetched result, accounting for nulls becoming empty fields.
+Before delivering an extract, reconcile the fetched row count with result metadata, verify column widths, check campaign-ID uniqueness, and confirm source association timestamps satisfy `>= start_date` and `< end_date` for any supplied bounds. Check timestamps immediately before and exactly at both midnight boundaries; an equal-date range must be empty. Without date bounds, report observed coverage and missing dates instead of claiming a requested period. Read the saved CSV back and compare its parsed values with the fetched result, accounting for nulls becoming empty fields.
 
 For a first run or a change to joins or metric logic, reconcile valid-response, MQL, and opportunity totals against independent source aggregations for a bounded period. Check that nonresponding members retain their MQL and opportunity attribution and that valid responses do not exceed the cohort's member count. Validate NBM counts separately when their logic changes, using the same date and eligibility rules. Investigate discrepancies before claiming correctness. An empty result is valid if the query succeeded; produce a header-only CSV and state that no records matched.
 

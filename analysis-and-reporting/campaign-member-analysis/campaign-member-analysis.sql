@@ -1,4 +1,4 @@
--- Campaign-member detail by inclusive first-associated calendar date.
+-- Campaign-member detail by first-associated timestamp: inclusive start, exclusive end.
 -- Render date parameters as SQL date values. Keep members without responses
 -- eligible for MQL/SAO/PG attribution. Rows can repeat per MQL x opportunity;
 -- count distinct IDs and deduplicate by opportunity before summing pipeline.
@@ -181,5 +181,6 @@ LEFT JOIN dwh_analytics.marketing.fig2_sf_sales_opportunity_source AS os
 LEFT JOIN dwh_cleaned.salesforce.cleaned_salesforce_contact AS c
     ON cm.person_id = c.id
 WHERE cm.campaign_channel IS NOT NULL
-    AND CAST(cm.campaign_member_first_associated_date AS DATE)
-        BETWEEN CAST({{ start_date }} AS DATE) AND CAST({{ end_date }} AS DATE);
+    -- Match the campaign-summary/Hex cohort: inclusive start, exclusive end.
+    AND cm.campaign_member_first_associated_date >= {{ start_date }}
+    AND cm.campaign_member_first_associated_date < {{ end_date }};

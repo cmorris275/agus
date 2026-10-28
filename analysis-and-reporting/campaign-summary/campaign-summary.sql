@@ -1,7 +1,8 @@
 -- Campaign summary for members first associated within the selected date range.
--- Render start_date and end_date as SQL date values before execution.
--- Both boundary dates are inclusive; calendar fields use the first association
--- within this range, not necessarily the campaign's first-ever association.
+-- Render the selected dates as midnight boundaries, matching the Hex notebook.
+-- Start date is inclusive; End date (exclusive) stops at its beginning midnight.
+-- Calendar fields use the first association within this range, not necessarily
+-- the campaign's first-ever association.
 -- Output grain: one row per distinct combination of campaign ID and selected
 -- campaign attributes. Attribute differences can yield multiple rows per ID.
 WITH campaign_members AS (
@@ -9,10 +10,9 @@ WITH campaign_members AS (
     -- attribution credit does not require a valid campaign response.
     SELECT cm.*
     FROM dwh_analytics.marketing.fig2_dim_campaign_member AS cm
-    -- Compare stored calendar dates explicitly to avoid session-timezone
-    -- conversion when comparing TIMESTAMP_TZ values with DATE boundaries.
-    WHERE CAST(cm.campaign_member_first_associated_date AS DATE)
-        BETWEEN CAST({{ start_date }} AS DATE) AND CAST({{ end_date }} AS DATE)
+    -- Preserve the source timestamp and the notebook's exclusive end boundary.
+    WHERE cm.campaign_member_first_associated_date >= {{ start_date }}
+        AND cm.campaign_member_first_associated_date < {{ end_date }}
         -- Optional: filter to a specific campaign.
         -- AND cm.campaign_name ILIKE '%{campaign_name_fragment}%'
 ),
