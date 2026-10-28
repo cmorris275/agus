@@ -5,9 +5,9 @@ description: Extract and analyze Weave MQL cohorts using the bundled Snowflake q
 
 # Weave MQL analysis
 
-Read [weave_mql.sql](weave_mql.sql) before execution. Resolve it relative to this folder. This first draft documents the supplied query; the upstream definition of a Weave MQL is not established by this SELECT.
+Read [weave_mql_analysis.sql](weave_mql_analysis.sql) before execution. Resolve it relative to this folder. This first draft documents the supplied query; the upstream definition of a Weave MQL is not established by this SELECT.
 
-The `responses` and `nbm` CTEs and their output expressions are aligned with [mql.sql](../mql/mql.sql). When updating these shared definitions, compare both the activity source and the per-MQL matching expression. Retain the Weave source, campaign classifications, and opportunity scope when synchronizing these sections.
+The `responses` and `nbm` CTEs and their output expressions are aligned with [mql_analysis.sql](../mql_analysis/mql_analysis.sql). When updating these shared definitions, compare both the activity source and the per-MQL matching expression. Retain the Weave source, campaign classifications, and opportunity scope when synchronizing these sections.
 
 ## Population, dates, and grain
 
@@ -68,7 +68,7 @@ The event CTE deduplicates the concatenated account/person/related-record/end-da
 
 Use an authorized Snowflake connection and honor an explicitly requested platform. Prepare optional cohort and activity predicates together as described above, using validated SQL date values or supported bindings. The saved activity CTEs reference only `start_date`; there is no saved final start/end cohort predicate to render. Remove unused placeholders and avoid a standalone activity cutoff on an unrestricted cohort. Keep request-specific filters in an execution copy unless a template change is requested. Do not claim execution or fresh results when access is unavailable.
 
-For CSV requests, use `raw_data/weave_mql_YYYY-MM-DD_to_YYYY-MM-DD.csv` for a supplied range, `raw_data/weave_mql_all_dates.csv` without date bounds, or a `from_YYYY-MM-DD`/`through_YYYY-MM-DD` suffix for one-sided bounds. Add a scope suffix when useful. Export every row/page and column with UTF-8 CSV quoting, ISO dates, unchanged identifiers and numeric precision, and empty fields for nulls. Avoid overwriting a different extract unless a refresh is requested. Keep reporting metadata outside the raw CSV and read the saved file back to verify it matches the fetched result. A successful empty result should produce a header-only file.
+For CSV requests, use `raw_data/weave_mql_analysis_YYYY-MM-DD_to_YYYY-MM-DD.csv` for a supplied range, `raw_data/weave_mql_analysis_all_dates.csv` without date bounds, or a `from_YYYY-MM-DD`/`through_YYYY-MM-DD` suffix for one-sided bounds. Add a scope suffix when useful. Export every row/page and column with UTF-8 CSV quoting, ISO dates, unchanged identifiers and numeric precision, and empty fields for nulls. Avoid overwriting a different extract unless a refresh is requested. Keep reporting metadata outside the raw CSV and read the saved file back to verify it matches the fetched result. A successful empty result should produce a header-only file.
 
 Validate any supplied date bounds, observed coverage and null dates when unbounded, result completeness, distinct MQL counts against the Weave source, and opportunity uniqueness before pipeline sums. For changed logic, reconcile flags at MQL grain and check date/hour boundaries, overlapping activity, missing joins, and classification precedence, including Weavy, Figma website, Product, Scored, and fallback cases. Do not transfer the general MQL query's commercial-opportunity restriction to this query.
 

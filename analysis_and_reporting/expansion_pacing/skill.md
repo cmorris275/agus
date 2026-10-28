@@ -1,17 +1,17 @@
 ---
 name: expansion-pacing
-description: Calculate marketing expansion pace from Expansion-skill actuals and daily goals, using matching accrued dates capped by the snapshot through-date and available data. Use for monthly or quarterly expansion pace by region, supported subregion, or Renewal/Upsell type.
+description: Calculate marketing expansion pace from Expansion attribution actuals and daily goals, using matching accrued dates capped by the snapshot through-date and available data. Use for monthly or quarterly expansion pace by region, supported subregion, or Renewal/Upsell type.
 ---
 
 # Expansion pacing
 
-Use the [Expansion skill](../expansion/skill.md) and its [expansion.sql](../expansion/expansion.sql) for actuals, and [daily_goals.csv](daily_goals.csv) for goals. Resolve these resources relative to this folder. This workflow is for **marketing expansion only**.
+Use the [Expansion attribution skill](../expansion_attribution/skill.md) and its [expansion_attribution.sql](../expansion_attribution/expansion_attribution.sql) for actuals, and [daily_goals.csv](daily_goals.csv) for goals. Resolve these resources relative to this folder. This workflow is for **marketing expansion only**.
 
 ## Sources and actuals
 
-The dedicated expansion-pacing tables have not been created. [expansion_pacing.sql](expansion_pacing.sql) intentionally remains a placeholder; it is not needed to fetch actuals from the existing Expansion source. Do not invent the future tables or substitute the SAO/PG goals source.
+The dedicated expansion-pacing tables have not been created. [expansion_pacing.sql](expansion_pacing.sql) intentionally remains a placeholder; it is not needed to fetch actuals from the existing Expansion attribution source. Do not invent the future tables or substitute the SAO/PG goals source.
 
-Follow the Expansion skill's source and aggregation rules:
+Follow the Expansion attribution skill's source and aggregation rules:
 
 - Source: `dwh_analytics.marketing.expansion_marketing_attribution_detail`.
 - Population: `campaign_channel IS NOT NULL`. Preserve the Expansion query's population; do not add a sales-segment exclusion from the SAO/PG pacing workflow.
@@ -20,7 +20,7 @@ Follow the Expansion skill's source and aggregation rules:
 - Region: `COALESCE(region_picklist_clean, 'AMER')`, as in the Expansion query. Subregion is `sub_region_clean`; retain the null-region fallback disclosure where relevant.
 - Type: map any `final_type` containing `Upsell`, case-insensitively, to **Upsell**. This includes True Up Upsell and Lock In Upsell. Map Renewal to **Renewal**; surface other or missing types rather than silently assigning them.
 
-Do not sum repeated full invoice amounts as the pacing actual or add `touch_ai_expansion_arr` to the selected measure. Retain the Expansion skill's cautions about invoice/touch grain, nulls, negative values, and units. Avoid `SUM(DISTINCT amount)` as a deduplication shortcut.
+Do not sum repeated full invoice amounts as the pacing actual or add `touch_ai_expansion_arr` to the selected measure. Retain the Expansion attribution skill's cautions about invoice/touch grain, nulls, negative values, and units. Avoid `SUM(DISTINCT amount)` as a deduplication shortcut.
 
 A daily execution query may aggregate `touch_allocated_value` by invoice date, region, subregion, and mapped type. Aggregate actuals and goals separately to the same reporting grain before comparing them; never join individual attribution touches to repeated daily goals.
 
@@ -81,7 +81,7 @@ Reporting dates are optional user inputs. Validate supplied dates and apply appr
 
 Use an authorized Snowflake connection for actuals and the supplied CSV for goals. When preparing a comparison across available goals without an explicit period, use the target file's observed coverage to identify comparable periods and disclose that scope. The current file supports 2026 comparisons; actuals outside its coverage have no supplied goals.
 
-Before reporting pace, verify target uniqueness at `(DATE, REGION, SUB_REGION, TYPE)`, actual measure additivity, type/region mappings, date coverage, and matching units. Reconcile independently aggregated actual totals with the Expansion source under the same filters. Confirm that no actual or target after the effective through-date entered either sum.
+Before reporting pace, verify target uniqueness at `(DATE, REGION, SUB_REGION, TYPE)`, actual measure additivity, type/region mappings, date coverage, and matching units. Reconcile independently aggregated actual totals with the Expansion attribution source under the same filters. Confirm that no actual or target after the effective through-date entered either sum.
 
 For extracts, fetch every result row/page, compare fetched counts with result metadata, and split execution into date windows if the connector truncates results. Save raw exports or daily aggregates in the project's `raw_data/` folder with descriptive dates, and retain the query, extraction context, and observed date coverage. Label aggregates as aggregates. Distinct invoice counts within daily groups are not necessarily additive across groups. Read saved CSVs back to verify completeness and values.
 

@@ -3,11 +3,11 @@ Improvements
 Pending: Replace the campaign-member subregion fallback
 
 The current cm_sales_sub_region expression in
-analysis_and_reporting/campaign_member/campaign_member.sql falls back to
+analysis_and_reporting/campaign_member_analysis/campaign_member_analysis.sql falls back to
 cm.sales_region when opportunity and MQL subregions are unavailable.
 This is intentional while an upstream table update is pending.
 
 Once that table provides the needed subregion data, update the query to use
-the appropriate subregion field and join, update the campaign-member skill
+the appropriate subregion field and join, update the campaign-member-analysis skill
 documentation, and validate the resulting subregion assignments and row counts.
 Keep the current fallback until the upstream update is available.

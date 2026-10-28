@@ -1,11 +1,11 @@
 ---
-name: sao-and-pg-pace
+name: sao-and-pg-pacing
 description: Calculate monthly or quarterly pace for MQL, SAO, PG, and derived ASP, grouped first by attributed source (Marketing versus Sales). Project MQL, SAO, and PG for partial periods using working days; ASP pace always compares actual ASP with goal ASP. Support region or segment breakdowns.
 ---
 
-# Goal attainment and pacing
+# SAO and PG pacing
 
-Read [sao_and_pg_pace.sql](sao_and_pg_pace.sql) before execution. Resolve the query relative to this folder and output paths relative to the user's project. The source is `DWH_ANALYTICS.MARKETING.GOALS_ACTUALS_COMBINED`. The pacing and ASP definitions below are the user's business rules. Inspect the source for goal/actual labels, upstream metric definitions, and refresh timing.
+Read [sao_and_pg_pacing.sql](sao_and_pg_pacing.sql) before execution. Resolve the query relative to this folder and output paths relative to the user's project. The source is `DWH_ANALYTICS.MARKETING.GOALS_ACTUALS_COMBINED`. The pacing and ASP definitions below are the user's business rules. Inspect the source for goal/actual labels, upstream metric definitions, and refresh timing.
 
 ## Reporting scope
 
@@ -86,7 +86,7 @@ PG and SAO inputs follow the completed-versus-partial-period rules above. For a 
 
 ## Execute, validate, and deliver
 
-Use an authorized Snowflake connection, honoring an explicitly requested platform. Validate or bind request-specific filters. For CSV requests, use `raw_data/sao_and_pg_pace_YYYY-MM_to_YYYY-MM.csv` for a bounded monthly scope, or `raw_data/sao_and_pg_pace_all_dates.csv` without date bounds. Use `from_YYYY-MM`/`through_YYYY-MM` suffixes for one-sided monthly bounds. Add a scope suffix when needed and avoid overwriting a different extract without a refresh request.
+Use an authorized Snowflake connection, honoring an explicitly requested platform. Validate or bind request-specific filters. For CSV requests, use `raw_data/sao_and_pg_pacing_YYYY-MM_to_YYYY-MM.csv` for a bounded monthly scope, or `raw_data/sao_and_pg_pacing_all_dates.csv` without date bounds. Use `from_YYYY-MM`/`through_YYYY-MM` suffixes for one-sided monthly bounds. Add a scope suffix when needed and avoid overwriting a different extract without a refresh request.
 
 Export all result rows and the seven selected columns using UTF-8 CSV quoting, ISO dates, preserved numeric precision, and empty fields for SQL nulls. Use stable ordering by the reporting dimensions. Keep calculated summaries outside the raw extract unless the requested deliverable calls for them.
 

@@ -1,5 +1,5 @@
 -- Reserved for the future combined expansion-pacing source; tables do not yet exist.
--- Current actuals: use ../expansion/skill.md and ../expansion/expansion.sql.
+-- Current actuals: use ../expansion_attribution/skill.md and ../expansion_attribution/expansion_attribution.sql.
 -- Marketing actual measure: touch_expansion_arr (touch_allocated_value).
 -- Current goals: daily_goals.csv in this folder.
 -- See skill.md for matching accrued-date windows and snapshot/availability caps.

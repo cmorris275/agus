@@ -5,7 +5,7 @@ description: Extract and analyze MQL cohorts using the bundled Snowflake query, 
 
 # MQL analysis
 
-Read [mql.sql](mql.sql) before execution. Resolve it relative to this folder. Use its implemented rules as the starting point, distinguishing business definitions from classifications inferred from campaign names or activity metadata.
+Read [mql_analysis.sql](mql_analysis.sql) before execution. Resolve it relative to this folder. Use its implemented rules as the starting point, distinguishing business definitions from classifications inferred from campaign names or activity metadata.
 
 ## Cohort, dates, and row grain
 
@@ -70,7 +70,7 @@ The event CTE deduplicates the account/person/related-record/end-date meeting ke
 
 Use an authorized Snowflake connection and honor an explicitly requested platform. Prepare the optional cohort and activity predicates together as described above, using validated SQL dates or supported bindings. Remove unused date placeholders; do not leave a standalone activity cutoff on an unrestricted cohort. Keep requested filters in the execution copy unless editing the reusable query is part of the task.
 
-When CSV is requested, use `raw_data/mql_YYYY-MM-DD_to_YYYY-MM-DD.csv` for a supplied range, `raw_data/mql_all_dates.csv` without date bounds, or a `from_YYYY-MM-DD`/`through_YYYY-MM-DD` suffix for one-sided bounds. Fetch all rows/pages, preserve the source columns and existing aliases, use standard UTF-8 CSV quoting, retain numeric precision and identifiers, and represent SQL nulls as empty fields. Verify the saved file by reading it back. Do not silently replace a different extract.
+When CSV is requested, use `raw_data/mql_analysis_YYYY-MM-DD_to_YYYY-MM-DD.csv` for a supplied range, `raw_data/mql_analysis_all_dates.csv` without date bounds, or a `from_YYYY-MM-DD`/`through_YYYY-MM-DD` suffix for one-sided bounds. Fetch all rows/pages, preserve the source columns and existing aliases, use standard UTF-8 CSV quoting, retain numeric precision and identifiers, and represent SQL nulls as empty fields. Verify the saved file by reading it back. Do not silently replace a different extract.
 
 Check any supplied cohort bounds, observed coverage and null MQL dates when unbounded, distinct-MQL counts versus source, opportunity uniqueness before revenue sums, and join duplication. After activity or pickup changes, test boundary dates/hours, missing values, and multiple events for one person without multiplying MQL counts. Reconcile flags at MQL grain. If no records match, deliver a header-only extract; if execution is unavailable, state that limitation rather than reusing stale data as fresh.
 
