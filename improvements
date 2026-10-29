@@ -15,3 +15,7 @@ Keep the current fallback until the upstream update is available.
 Pending: Add a Renewal Opportunity query
 
 Pending: Add an Invoices dimension for Expansion attribution, or create a separate skill
+
+Pending: Pull actuals through yesterday
+
+Pending: Add sub_region documentation
