@@ -56,12 +56,12 @@ SELECT
     -- Dim Campaign Member Sourced Info
     cm.campaign_member_first_associated_date, -- Reporting cohort date.
     cm.campaign_member_first_responded_date, -- Non-null = valid campaign response.
-
-    -- Region precedence: opportunity, MQL, then member.
+    
+    -- Region and subregion for the campaign member is driven by the Account object.
+    cm.sales__region,
     -- The final subregion fallback is currently a region, not a true subregion.
-    COALESCE(os.sales_region, m.person_sales_region, cm.sales_region) AS cm_sales_region,
-    COALESCE(os.sales_sub_region, m.person_sales_sub_region, cm.sales_region) AS cm_sales_sub_region,
-
+    -- This is due to the sparseness of this data amongst campaign members.
+    cm.sales_sub_region,
     cm.person_id,
     CASE
         WHEN c.jobseniority__c IN ('Executive', 'C-Level', 'Board Members', 'VP-Level', 'Director')

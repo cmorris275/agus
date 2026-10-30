@@ -15,7 +15,8 @@ WITH campaign_members AS (
         AND cm.campaign_member_first_associated_date < {{ end_date }}
         -- Optional: filter to a specific campaign.
         -- AND cm.campaign_name ILIKE '%{campaign_name_fragment}%'
-),
+        -- sales_region and sales_sub_region should be used for filtering in terms of geography/location.
+),  
 
 nbm AS (
     -- NBM = New Business Meeting, identified by the Salesforce event type
